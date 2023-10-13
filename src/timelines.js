@@ -98,6 +98,7 @@ export default Kapsule({
     maxLineHeight: { default: 12 },
     leftMargin: { default: 90 },
     rightMargin: { default: 100 },
+    disableReduceLabels: { default: false },
     topMargin: {default: 26 },
     bottomMargin: {default: 30 },
     useUtc: { default: false },
@@ -317,7 +318,7 @@ export default Kapsule({
 
     graphW: null,
     graphH: null,
-
+    
     completeStructData: null,
     structData: null,
     completeFlatData: null,
@@ -871,7 +872,7 @@ export default Kapsule({
       let maxChars = Math.ceil(state.rightMargin/(fontSize/Math.sqrt(2)));
 
       state.yAxis.tickValues(tickVals);
-      state.yAxis.tickFormat(d => reduceLabel(d.split('+&+')[1], maxChars));
+      state.yAxis.tickFormat(d => state.disableReduceLabels? d.split('+&+')[1] : reduceLabel(d.split('+&+')[1], maxChars));
       state.svg.select('g.y-axis')
         .transition().duration(state.transDuration)
           .attr('transform', 'translate(' + state.graphW + ', 0)')
@@ -885,7 +886,7 @@ export default Kapsule({
       fontSize = Math.min(14, minHeight*fontVerticalMargin*Math.sqrt(2));
       maxChars = Math.floor(state.leftMargin/(fontSize/Math.sqrt(2)));
 
-      state.grpAxis.tickFormat(d => reduceLabel(d, maxChars));
+      state.grpAxis.tickFormat(d => state.disableReduceLabels? d : reduceLabel(d, maxChars));
       state.svg.select('g.grp-axis')
         .transition().duration(state.transDuration)
         .style('font-size', fontSize + 'px')
